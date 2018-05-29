@@ -1,11 +1,12 @@
 import io
 import sys
 
+#https://code.google.com/codejam/contest/8384486/dashboard
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
     filename = sys.argv[1]
     inp = ''.join(open(filename, "r").readlines())
-    sys.stdin = io.StringIO(unicode(inp))
+    sys.stdin = io.StringIO(inp)
 
 def cal_err(dist, opt):
     err = 0
