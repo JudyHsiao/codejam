@@ -19,6 +19,10 @@ def initM(D):
         for i in range(25):
             I.append(['I','/','O','O']*12+['O',"O"])
             I.append(['O']*50)
+
+    if D ==15:
+        for i in range(15):
+            I.append(['I','/', 'O','/']*3 +['I','/','O'])
     return I
 
 
@@ -37,6 +41,30 @@ def wordsearch(D, T):
                 j+=1
             j = 0
             i+=1
+    if D == 15:
+        toDel = 287 - T
+        i = 1
+        j = 0
+        while toDel > 3 and i < D-1:
+            while toDel > 3 and j < D:
+                if M[i][j] == '/':
+                    M[i][j] = 'O'
+                    toDel-=3
+                j+=1
+            j = 0
+            i+=1
+        
+        i = 0
+        j = 0
+        while toDel >0 and i <=14:
+            while toDel > 0 and j < D:
+                if M[i][j] == '/':
+                    M[i][j] = 'O'
+                    toDel-=1
+                j+=1
+            j = 0
+            i = 14
+
 
     return M
 
