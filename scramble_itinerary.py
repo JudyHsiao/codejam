@@ -2,7 +2,8 @@ import io
 import sys
 import collections
 
-
+# Kickstart Practice Round 2018
+# https://code.google.com/codejam/contest/4374486/dashboard
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
     filename = sys.argv[1]
