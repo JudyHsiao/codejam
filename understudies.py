@@ -2,7 +2,7 @@ import io
 import sys
 import collections
 
-
+# 2017 io for women https://code.google.com/codejam/contest/12224486/dashboard#s=p0&a=2
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
     filename = sys.argv[1]
