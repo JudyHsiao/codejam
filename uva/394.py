@@ -13,7 +13,7 @@ def cal_address(A, ask):
         C[i] = C[i+1]*(bounds[i+1][1] - bounds[i+1][0] +1)
     C[0] = B
     for i in range(1,D+1):
-        C[0]=C[0]-C[i]*bounds[i][1]
+        C[0]=C[0]-C[i]*bounds[i][0]
 
     ans = C[0]
     for i in range(1,D+1):
@@ -23,7 +23,7 @@ def cal_address(A, ask):
 
 
 def main():
-    [N, R] = [int(s) for s in input().split(" ")]
+    [N, R] = [int(s) for s in input().split(" ") if s != ""]
     A = collections.defaultdict(list)
     for i in range(N):
         tmp =  [s for s in input().split(" ")]
