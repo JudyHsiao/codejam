@@ -2,7 +2,7 @@ import io
 import sys
 import collections
 
-
+#https://code.google.com/codejam/contest/5304486/dashboard#s=p0
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
     filename = sys.argv[1]
@@ -11,6 +11,7 @@ if len(sys.argv) > 1:
 
 def fill_alphabet(A, R, C):
     for r in range(R):
+
         for c in range(C):
             if A[r][c] == '?'
 
