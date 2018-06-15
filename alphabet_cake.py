@@ -20,7 +20,6 @@ def count_todo(M, startR, endR,  startC, endC):
 
 def get_alphabets(M, startR, endR,  startC, endC):
     A = set()
-    count = 0
     for r in range(startR, endR):
         for c in range(startC, endC):
             if M[r][c] != '?':
@@ -35,31 +34,39 @@ def fill_alphabet(M, startR, endR,  startC, endC):
 
     alphabets = get_alphabets(M, startR, endR,  startC, endC)
     if len(alphabets) == 1:
+        ch = alphabets.pop()
         for i in range(startR, endR) :
             for j in range(startC, endC):
                 if M[i][j] == '?':
-                    M[i][j] = alphabets[0]
+                    M[i][j] = ch
         return 
-
-    for r in range(startR+1, endR) :
+    r = startR+1
+    while r < endR :
         A = get_alphabets(M, startR, r, startC, endC)
         B = get_alphabets(M, r, endR, startC, endC)
         if len(A & B) == 0 and len(A) > 0 and len(B) > 0:
             break
+        r+=1
 
-    for c in range(startC+1, endC):
+    c = startC+1
+    while c < endC:
         A = get_alphabets(M, startR, r, startC, c)
         B = get_alphabets(M, startR, r, c, endC)
         if len(A & B) == 0 and len(A) > 0 and len(B) > 0:
-            fill_alphabet(M, startR, r,  startC, c)
-            fill_alphabet(M, startR, r,  c, endC)
+            break
+        c+=1
+    fill_alphabet(M, startR, r,  startC, c)
+    fill_alphabet(M, startR, r,  c, endC)
 
-    for c in range(startC+1, endC):
+    c = startC+1
+    while c < endC:
         A = get_alphabets(M, r, endR, startC, c)
         B = get_alphabets(M, r, endR, c, endC)
         if len(A & B) == 0 and len(A) > 0 and len(B) > 0:
-            fill_alphabet(M, r, endR,  startC, c)
-            fill_alphabet(M, r, endR,  c, endC)
+            break
+        c+=1
+    fill_alphabet(M, r, endR,  startC, c)
+    fill_alphabet(M, r, endR,  c, endC)
 
 
 
@@ -72,12 +79,10 @@ def main():
             A.append(list(input()))
         
         fill_alphabet(A, 0, R, 0 , C)
-        print(A)
-        
-        
+        print("Case #{}:".format(i))
+        for r in range(R):
+            print("{}".format("".join(A[r])))
 
-
-        #print("Case #{}: {} {} {}".format(i, one, two, three))
         
 
 
