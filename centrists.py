@@ -32,9 +32,9 @@ def create_alphabet_order(words):
     return G,V
 
 def topoSort(G, s,  visited, order):
-        if visited[s]  == 2:
+        if visited[s]  == 2:  #visited
             return True
-        if visited[s] == 1:
+        if visited[s] == 1:   #visiting
             return False
         
         visited[s] = 1
