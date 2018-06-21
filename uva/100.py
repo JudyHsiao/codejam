@@ -1,5 +1,5 @@
 import sys
-import functools
+
 
 h = {}
 def cycleL(n):
