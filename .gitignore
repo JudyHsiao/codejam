@@ -1,8 +1,9 @@
 # .gitignore
 __pycache__
 .vscode
+tmp
 bin
-dist
+dists
 lib
 include
 pip-selfcheck.json
