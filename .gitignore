@@ -1,0 +1,8 @@
+# .gitignore
+__pycache__
+.vscode
+bin
+dist
+lib
+pip-selfcheck.json
+pyvenv.cfg
