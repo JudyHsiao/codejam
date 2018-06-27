@@ -45,17 +45,16 @@ def merge_sort(A):
 
 def main():
     while True:
-        t = int(input())
-        if t == 0 :
+        A=[int(s) for s in input().split()]
+        if A[0] == 0:
             exit(0)
-        A=[]
         global swap 
         swap = 0
-        for i in range(t):
-            n = int(input())
-            A.append(n)
-        A = merge_sort(A) 
-        print("{}".format(swap))
+        merge_sort(A[1:]) 
+        if swap %2 ==1:
+            print("Marcelo")
+        else:
+            print("Carlos")
 
 
 if __name__ == "__main__":
