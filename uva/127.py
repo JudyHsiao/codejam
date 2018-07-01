@@ -39,9 +39,6 @@ def play(P):
     
     return P
  
-
-
-
 def main():
     while True:
         line1 = input()
@@ -52,8 +49,7 @@ def main():
         cards = line1.split() + line2.split()        
         P = [[0] for i in range(52)]
         for i in range(52):
-            P[i][0] = cards[i]
-        
+            P[i][0] = cards[i]       
         P= play(P)
         L = []
         for p in P:
@@ -62,9 +58,7 @@ def main():
             print("{} piles remaining: {}".format(len(P), " ".join(L)))
         else:
             print("{} pile remaining: {}".format(len(P), " ".join(L)))
-        
-        
 
-
+           
 if __name__ == "__main__":
     main()
