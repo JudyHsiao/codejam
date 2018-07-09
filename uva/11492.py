@@ -3,7 +3,6 @@ import sys
 import collections
 import heapq
 
-#https://www.programcreek.com/python/example/101782/heapq._siftdown
 
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
@@ -26,26 +25,35 @@ class Graph:
         self.adj[dest].append(newNode)
 
 def dijkstra(G, s):
-    dist = {}
+    dist = collections.defaultdict(dict)
     for v in G.V:
-        dist[v] = [float("inf"), ""]
-    dist[s] = [0,""]
+        for c in "abcdefghijklmnopqrstuvwxyz":
+            if v != s: 
+                dist[v][c] = float("inf")
+            else:
+                dist[v][c] = 0
+      
 
-    parent = {}
 
     Q = []
-    heapq.heappush(Q, (dist[s][0], s, ""))
+    heapq.heappush(Q, (0, s, ""))
+    dist[s][""] = 0  
     while len(Q):
-        print(Q)
+        #print(Q)
         d, u, word = heapq.heappop(Q)
-        if d == dist[u] :  
+        if len(word) == 0:
+            c = ""
+        else:
+            c = word[0]
+        if d == dist[u][c]:  
             for v, w in G.adj[u]:
-                if dist[u] + len(w) < dist[v]:
-                    dist[v] = dist[u] + len(w)
-                    parent[v] = u
-                    heapq.heappush(Q, (dist[v], v, w))
+                for ch in "abcdefghijklmnopqrstuvwxyz":
+                    if ch != w[0]:
+                        if dist[u][ch] + len(w) < dist[v][w[0]]:
+                            dist[v][w[0]] = dist[u][ch] + len(w)
+                            heapq.heappush(Q, (dist[v][w[0]], v, w))
 
-    return dist, parent
+    return dist
 
 
 
@@ -63,11 +71,19 @@ def main():
             G.V.add(u)
             G.V.add(v)
 
-        dist, parent = dijkstra(G, O)
-        if dist[D] < float("inf"):
-            print(dist[D])    
+        if O not in G.V or D not in G.V:
+            print("impossivel")    
+            continue
+            
+        dist = dijkstra(G, O)
+        d = float("inf")
+        for ch in "abcdefghijklmnopqrstuvwxyz":
+            d = min(d, dist[D][ch])
+        
+        if d < float("inf"):
+            print(d)    
         else:
-            print("impossivel") 
+            print("impossivel")    
             
 
 if __name__ == "__main__":
