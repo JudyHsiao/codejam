@@ -1,13 +1,18 @@
 class UnionFind:
     def __init__(self, V):
-        self.V = V
+        self.V = set(V)
         self.parent = {}
-        self.rank = {}
+        self.rank = collections.defaultdict(int)
         for v in V:
             self.parent[v] = v
             self.rank[v] = 0
 
     def find(self, v):
+        self.V.add(v)
+
+        if v not in self.parent:
+            self.parent[v] = v
+
         if self.parent[v] != v:
             self.parent[v] = self.find(self.parent[v])
         
@@ -28,3 +33,9 @@ class UnionFind:
             self.parent[r2] = r1
         
         return True
+    
+    def sizeOfSet(self):
+        for v in self.V:
+            self.find(v)
+        C = collections.Counter(self.parent.values())
+        return len(C.keys())
