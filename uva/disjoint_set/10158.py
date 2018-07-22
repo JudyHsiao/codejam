@@ -2,6 +2,7 @@ import io
 import sys
 import collections
 
+# war
 
 # Simulate the redirect stdin.
 if len(sys.argv) > 1:
