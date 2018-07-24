@@ -1,4 +1,4 @@
-def counting_sort(A, R):
+def counting_sort(A, R): #A:array, R: range
     B=[0] * R
     for i in A:
         B[i] +=1
