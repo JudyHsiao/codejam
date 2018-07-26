@@ -58,7 +58,7 @@ class SegmentTree(object):
 def main():
     A = [8,7,3,9,5,1,10]
     SGT = SegmentTree(7)
-    SGT.build(1, A, 1, 0, 6)
+    SGT.build(MIN, A, 1, 0, 6)
     print(SGT.query(MIN, A, 1, 0, 6, 1, 3))
 
 if __name__ == "__main__":
