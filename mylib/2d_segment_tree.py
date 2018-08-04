@@ -5,33 +5,50 @@ MAX = 2
 
 class SegmentTree(object):
     def __init__(self, N):
-        self.tree = [0] * (4*N)
+        self.tree = [0] * (4*N*N)
 
 
-    def build(self, code, A, i, b, e):
-        if b == e:
+    def build(self, code, A, i, j, x1, x2, y1, y2):
+        if x1 == x2 and y1 == y2:
             if code == SUM: # RANGE SUM
-                self.tree[i] = A[b]  
+                self.tree[i][j] = A[x1][y1]  
             else:
-                self.tree[i] = b  # is RANGE_MIN/MAXIMUM, store index
+                self.tree[i][j] = (x1, y1)  # is RANGE_MIN/MAXIMUM, store index
+        elif x1 == x2:
+            
         else:
-            left  = 2 * i
-            right = 2*i + 1
-            self.build(code, A, left, b, (b+e)//2)
-            self.build(code, A, right, (b+e)//2 +1, e)
+            self.build(code, A, 2*i, 2*j, x1, (x1+x2)//2, y1, (y1+y2) //2)
+            self.build(code, A, 2*i+1, 2*j, (x1+x2)//2+1, x2, y1, (y1+y2) //2)
+            self.build(code, A, 2*i, 2*j+1, x1, (x1+x2)//2, (y1+y2) //2+1, y2)
+            self.build(code, A, 2*i+1, 2*j+1, (x1+x2)//2+1, x2, (y1+y2) //2+1, y2)
 
-            lContent = self.tree[left]
-            rContent = self.tree[right]
+            NW = self.tree[2*i][2*j]
+            NE = self.tree[2*i+1][2*j]
+            SW = self.tree[2*i][2*j+1]
+            SE = self.tree[2*i+1][2*j+1]
+
 
             if code == SUM:
-                self.tree[i] = lContent + rContent
+                self.tree[i][j] = NW + NE + SW + SE
             else:
-                lValue = A[lContent]
-                rValue = A[rContent]
-                if code == 1: # RANGE_MIN
-                    self.tree[i] = lContent if (lValue <= rValue) else rContent
+                NWValue = A[NW[0]][NW[1]]
+                NEValue = A[NE[0]][NE[1]]
+                SWValue = A[SW[0]][SW[1]]
+                SEValue = A[SE[0]][SE[1]]
+                if code == MIN: # RANGE_MIN
+                    V = min(NWValue, NEValue, SWValue, SEValue)
                 else:
-                    self.tree[i] = lContent if (lValue >= rValue) else rContent
+                    V = max(NWValue, NEValue, SWValue, SEValue)
+
+                if V == NWValue:
+                    self.tree[i][j] = NW
+                elif V == NEValue:
+                    self.tree[i][j] = NE
+                elif V == SWValue:
+                    self.tree[i][j] = SW
+                else:
+                    self.tree[i][j] = SE
+                
     
     def update(self, code, A, node, b, e, i, v):
         if i > e or i < b:
