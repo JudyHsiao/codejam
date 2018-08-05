@@ -17,18 +17,14 @@ def solve(p, h, x, y):
     Tx = [p[idx_t[0]]]
     Ty = [h[idx_t[0]]]
     for i in range(1, len(idx_t)):
-        xa = Tx[-1]
-        ya = Ty[-1]
-
         xb = p[idx_t[i]]
         yb = h[idx_t[i]]
 
-        if xa + ya >= xb + yb :
-            continue         
-        else:
-            if xb - yb <= xa - ya:
-                Tx.pop()
-                Ty.pop()
+        while len(Tx) > 0 and (xb - yb <= Tx[-1] - Ty[-1]):
+            Tx.pop()
+            Ty.pop()
+
+        if  len(Tx) ==0 or  xb + yb > Tx[-1] + Ty[-1] :
             Tx.append(xb)
             Ty.append(yb)
 
@@ -36,8 +32,7 @@ def solve(p, h, x, y):
     for i in range(1, len(x)) :
         xx = x[i]
         k = bisect.bisect_left(Tx, xx)
-        for j in range(max(0,k-10), min(k+10, len(Tx))):
-        #for j in range(len(Tx)):
+        for j in range(max(0,k-1), min(k+1, len(Tx))):
             pp = Tx[j]
             if Ty[j] >= abs(xx- pp) + y[i]:
                 count+=1

@@ -1,27 +1,11 @@
 class UnionFind:
     def __init__(self, V):
-<<<<<<< HEAD
-        self.V = set(V)
-=======
->>>>>>> 83e1e38c8d1949393dcc859926c9a90fd1a4f138
         self.parent = {}
         self.rank = collections.defaultdict(int)
         for v in V:
             self.parent[v] = v
             self.rank[v] = 0
 
-<<<<<<< HEAD
-    def find(self, v):
-        self.V.add(v)
-
-        if v not in self.parent:
-            self.parent[v] = v
-
-        if self.parent[v] != v:
-            self.parent[v] = self.find(self.parent[v])
-        
-        return self.parent[v] 
-=======
     def find(self, x):
         #if x == -1:
         #    return -1
@@ -32,7 +16,6 @@ class UnionFind:
     
     def isSameSet(self, x, y):
         return self.find(x) == self.find(y)
->>>>>>> 83e1e38c8d1949393dcc859926c9a90fd1a4f138
 
     def union(self, x, y):
         r1 = self.find(x)
