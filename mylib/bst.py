@@ -1,6 +1,3 @@
-import io
-import sys
-import collections
 
 # A Binary Tree Node
 class Node:
@@ -135,71 +132,27 @@ class BST(object):
     
             # Delete the inorder successor
             n.right = self._deleteNode(n.right , temp.key)
-        return n
+        return n 
 
-# Simulate the redirect stdin.
-if len(sys.argv) > 1:
-    filename = sys.argv[1]
-    inp = ''.join(open(filename, "r").readlines())
-    sys.stdin = io.StringIO(inp)
+bst = BST()
+bst.insert(50)
+bst.insert(30)
+bst.insert(20)
+bst.insert(40)
+bst.insert(70)
+bst.insert(60)
+bst.insert(80)
 
-def countOdds(A, s ,t):
-    o = 0
-    for i in range(s, t+1):
-        if A[i] %2 ==1:
-            o+=1
-    return o
-
-
-def main():
-    T = int(input())  # read a line with a single integer
-
-    for t in range(1, T + 1):
-        
-        [N, O, D] = [int(s) for s in input().split()]
-        [X1, X2, A, B, C, M, L] = [int(s) for s in input().split()]
-        X = [0] * (N+1)
-        X[1] = X1
-        X[2] = X2
-        S = [0] * (N+1)
-        for i in range(3,N+1):
-            X[i] = (A*X[i-1] + B*X[i-2] + C) % M 
-
-        for i in range(1, N+1):
-            S[i] = X[i] + L
-        
-        PS = [0] * (N+1)
-        for i in range(1, N+1):
-            PS[i] = PS[i-1] + S[i]
-
-        bst = BST()
-        odd = 0
-        left = 1
-        maxSum = -float("inf")
-        for i in range(1, N+1):
-            if PS[i] % 2 == 1:
-                odd +=1
-
-            while odd > O and left < i:
-                if PS[left] % 2 == 1:
-                    odd -=1 
-                bst.delete(PS[left])
-                left+=1 
-
-            s = bst.lowerBound(PS[i] - D)
-            if s is not None:
-                tmp = PS[i] - s
-                if tmp > maxSum:
-                    maxSum = tmp
-
-            bst.insert(PS[i])
-
-        if maxSum == -float("inf"):
-            print("Case #{}: IMPOSSIBLE".format(t))
-        else:
-            print("Case #{}: {}".format(t, maxSum))
-        
+bst.inorder()
+n = bst.upperBound(50)
+print("upper Bound {}".format(n))
+n = bst.lowerBound(50)
+print("lower Bound {}".format(n))
 
 
-if __name__ == "__main__":
-    main()
+bst.delete(50)
+bst.inorder()
+n = bst.upperBound(50)
+print("upper Bound {}".format(n))
+n = bst.lowerBound(50)
+print("lower Bound {}".format(n))
