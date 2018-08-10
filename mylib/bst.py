@@ -14,31 +14,33 @@ class BST(object):
         self.root = None
 
     def inorder(self):
-        self._inorder(self.root)
+        A =[]
+        self._inorder(self.root, A)
+        return A
 
-    def _inorder(self, n):
+    def _inorder(self, n, A):
         if n is not None:
-            self._inorder(n.left)
-            print(n.key)
-            self._inorder(n.right)
+            self._inorder(n.left, A)
+            A.append(n.key)
+            self._inorder(n.right, A)
 
     def insert(self, key):
-        self.root = self._insert(self.root, key)
-
-    # A utility function to insert a new node with given key in BST
-    def _insert(self, node, key):
-        # If the tree is empty, return a new node
-        if node is None:
-            return Node(key)
-    
-        # Otherwise recur down the tree
-        if key < node.key:
-            node.left = self._insert(node.left, key)
-        else:
-            node.right = self._insert(node.right, key)
-    
-        # return the (unchanged) node pointer
-        return node
+        #self.root = self._insert(self.root, key)
+        if self.root is None:
+            self.root = Node(key)
+            return
+        n = self.root
+        while True:
+            if n.key > key:
+                if n.left is None:
+                    n.left = Node(key)
+                    return
+                n = n.left
+            else:
+                if n.right is None:
+                    n.right = Node(key)
+                    return
+                n = n.right
 
     def upperBound(self, D):  # node.key <= D 
         ans = None
@@ -88,7 +90,7 @@ class BST(object):
         return current 
 
     def delete(self, key):
-        self._deleteNode(self.root, key)
+        self.root = self._deleteNode(self.root, key)
  
     # Given a binary search tree and a key, this function
     # delete the key and returns the new root
@@ -106,7 +108,7 @@ class BST(object):
         # If the kye to be delete is greater than the root's key
         # then it lies in right subtree
         elif(key > n.key):
-            n.right = self.deleteNode(n.right, key)
+            n.right = self._deleteNode(n.right, key)
     
         # If key is same as root's key, then this is the node
         # to be deleted
@@ -136,23 +138,6 @@ class BST(object):
 
 bst = BST()
 bst.insert(50)
-bst.insert(30)
-bst.insert(20)
-bst.insert(40)
-bst.insert(70)
-bst.insert(60)
-bst.insert(80)
-
-bst.inorder()
-n = bst.upperBound(50)
-print("upper Bound {}".format(n))
-n = bst.lowerBound(50)
-print("lower Bound {}".format(n))
-
-
+print(bst.inorder())
 bst.delete(50)
-bst.inorder()
-n = bst.upperBound(50)
-print("upper Bound {}".format(n))
-n = bst.lowerBound(50)
-print("lower Bound {}".format(n))
+print(bst.inorder())
