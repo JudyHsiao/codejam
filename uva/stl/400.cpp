@@ -2,47 +2,41 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 using namespace std;
+
+// 输出字符串s，长度不足len时补字符extra
+void print(const string& s, int len, char extra) {
+  cout << s;
+  for(int i = 0; i < len-s.length(); i++)
+    cout << extra;
+}
 
 int main(){
     int n;
     while(scanf("%d",&n) == 1) {
         vector<string> filenames;
+        filenames.resize(n);
+        int M = 0;
         for (int i =0; i <n; i++) {
             cin >> filenames[i];
+            M = max(M, (int)filenames[i].length());
         }
         sort(filenames.begin(),filenames.end());
         printf("------------------------------------------------------------\n");
 
-        int col = n;
-        while( col > 0) {
-            int width = 60;
-            int number_of_words = n / col;
+        int cols = (60 - M)/(M+2) +1;
+        int rows = (n-1) / cols +1;
 
-            for (int c = 0; c < col; c++) {
-                auto start = filenames.begin()+ c * number_of_words;
-                auto end = start + number_of_words;
-                auto longest_filename = max_element(start, end,
-                 [](string a, string b) {  
-                    return (a.length() < b.length()); 
-                });
-
-                if (c < col -1) {
-                    width -= (longest_filename->length() + 2);
-                } else {
-                    width -= longest_filename->length();
-                }
-
-                if (width < 0){
-                    col--;
-                    break;
+        for (int r =0; r < rows; r++) {
+            for (int c =0; c< cols; c++) {
+                int idx = c * rows +r;
+                if (idx < n) {
+                    print(filenames[idx],  c == cols-1 ? M : M+2 , ' ');
                 }
             }
-            if (width >= 0) {
-                break;
-            }
+            cout << "\n";
         }
-
-        cout << "columm:" << col << endl;
+ 
     }
 }
