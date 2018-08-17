@@ -10,6 +10,15 @@ if len(sys.argv) > 1:
     sys.stdin = io.StringIO(inp)
 
 def main():
+
+    try:
+    while(1):
+        line = input("Say Something: ")
+        print(line)
+    except EOFError:
+        pass
+
+
     t = int(input())  # read a line with a single integer
     for i in range(1, t + 1):
         n = int(input())
