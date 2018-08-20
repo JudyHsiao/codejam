@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <sstream>
+#include <map>
 using namespace std;
 
 template <typename T>
@@ -17,7 +18,7 @@ string join(const T& v, const string& delim) {
     return s.str();
 }
 
-void split(string s, char delim, vector<string>& result) {
+void split(const string& s, char delim, vector<string>& result) {
     istringstream ss(s);
     string token;
     
@@ -27,9 +28,24 @@ void split(string s, char delim, vector<string>& result) {
     return;
 }
 
+map<string, int> id;
+int ID(const string& s) {
+  if(!id.count(s)) {
+    id[s] = id.size();
+  }
+  return id[s];
+}
 
-void trim(string &s) {
-    
+
+string trim(const string& str)
+{
+    size_t first = str.find_first_not_of(' ');
+    if (string::npos == first)
+    {
+        return str;
+    }
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
 }
 
 int main() {
@@ -41,6 +57,8 @@ int main() {
         cout << n << "\n"; 
     }
     cout << join(vector<int>({1, 2, 3, 4, 5}), ",") << endl;
+
+    cout<< ID("a") <<" " <<ID("b") <<" " <<ID("b")<< " " <<ID("c")<< endl;
 }
 
 
