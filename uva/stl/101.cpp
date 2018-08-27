@@ -15,7 +15,7 @@ void find_block(int a, int& p, int&h) {
                 p = i;
                 h = it - A[i].begin();
                 return ;
-            } 
+            }
         }
     }
     return ;
