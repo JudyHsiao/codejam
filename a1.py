@@ -19,8 +19,8 @@ def main():
         pass
 
 
-    t = int(input())  # read a line with a single integer
-    for i in range(1, t + 1):
+    T = int(input())  # read a line with a single integer
+    for t in range(1, T + 1):
         n = int(input())
         names = [s for s in input().split(" ")]
 

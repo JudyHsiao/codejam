@@ -55,30 +55,34 @@ int main(){
 
         vector<string> r_mta; // 所有需要连接的mta，按照输入顺序
         map<string, set<string>> receiver;
+        map<string, vector<string>> dest;
         while(cin >> t && t != "*") {
             User r ;
             parse_address(t, r);
             if (!receiver.count(r.mta)){
                 r_mta.push_back(r.mta);
             }
-            receiver[r.mta].insert(r.name);
+            if (!receiver[r.mta].count(r.name)){
+                receiver[r.mta].insert(r.name);
+                dest[r.mta].push_back(r.name);
+            }
         }
 
         getline(cin, t); 
-        // 输入邮件正文
+
         string data;
         while(getline(cin, t) && t[0] != '*') data += "     " + t + "\n";
 
         for(auto it:r_mta) {
-            set<string> r_names = receiver[it];
+            vector<string> r_names = dest[it];
             cout << "Connection between "<< sender.mta <<" and "<< it <<"\n";
             cout << "     HELO "<<sender.mta<<"\n";
             cout << "     250\n";
-            cout << "     MAIL FROM:<" << sender.name <<"@" << sender.mta <<">\n";
+            cout << "     MAIL FROM:<" << sender.name << "@" << sender.mta <<">\n";
             cout << "     250\n";
             bool send = false;
             for (auto name: r_names) {
-                cout << "     RCPT TO:<" << name<<"@"<<it << ">\n";
+                cout << "     RCPT TO:<" << name<<"@"<< it << ">\n";
                 if(mta[it].count(name)) {
                     cout << "     250\n";
                     send = true;
