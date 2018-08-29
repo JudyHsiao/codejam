@@ -2,6 +2,7 @@ import io
 import sys
 import collections
 import itertools
+import heapq
 
 
 # Simulate the redirect stdin.
@@ -10,17 +11,15 @@ if len(sys.argv) > 1:
     inp = ''.join(open(filename, "r").readlines())
     sys.stdin = io.StringIO(inp)
 
-def apply(A, complains, p):
-    count = sum(complains)
-    B = A[::]
-    for c, i in p:
-        count = count + c - complains[i]
-        if A[i] == '0':
-            B[i] = '1'
-        else:
-            B[i]= '0'
+def apply(tea, A):
+    complains = 0
 
-    return B, count
+    for i in range(len(A)):
+        for  j in range(len(tea)):
+            if tea[j] != A[i][j]:
+                complains +=1
+
+    return complains
 
 def main():
     T = int(input())  # read a line with a single integer
@@ -41,39 +40,32 @@ def main():
 
         best=["0"]*P
         complains=[0]*P
-        new_complains=[]
         for i in range(P):
             if cnt[i] > N//2:
                 best[i] = '1'
                 complains[i] = N - cnt[i]
-                new_complains.append((cnt[i], i))
             else:
                 complains[i] = cnt[i]
-                new_complains.append((N - cnt[i], i))
 
+        heap=[]
+        visited = set()
+        heapq.heappush(heap, (sum(complains), best))
+        visited.add(tuple(best))
+        while (len(heap)):
+            (total_complains, tea) = heapq.heappop(heap)
+            if "".join(tea) not in F:
+                ans = total_complains
+                break
+            
+            for i in range(P):
+                b = tea[::]
+                b[i] = '0' if tea[i] =='1' else '1'
+                total_complains = apply(b, A)
+                if tuple(b) not in visited:
+                    heapq.heappush(heap, (total_complains, b))
+                    visited.add(tuple(b))
 
-
-        new_complains.sort(key=lambda x:x[0])
-
-        
-        i = 0
-        ans = float("inf")
-        while i <= P:
-            for p in itertools.combinations(new_complains, i):
-                tea, total_complains = apply(best, complains, p)
-
-                if "".join(tea) not in F:
-                    if total_complains < ans:
-                        ans = total_complains
-            i+=1
         print("Case #{}: {}".format(t, ans))
-
-
-
-
-
-
-        #print("Case #{}: {}".format(t, count))
         
 
 
