@@ -1,93 +1,52 @@
-#include <cstdio>
-#include <vector>
-#include <cstring>
-#include <climits>
-
+// UVa10129 Play on Words
+// Rujia Liu
+// 题意：输入n个单词，是否可以排成一个序列，使得每个单词的第一个字母和上一个单词的最后一个字母相同
+// 算法：把字母看作结点，单词看成有向边，则有解当且仅当图中有欧拉路径。注意要先判连通
+#include<cstdio>
+#include<cstring>
+#include<vector>
 using namespace std;
 
+const int maxn = 1000 + 5;
 
-typedef pair<int, int> ii;
-typedef vector<ii> vii;
+// 并查集（代码摘自《算法竞赛入门经典——训练指南》第三章）
+int pa[256];
+int findset(int x) { return pa[x] != x ? pa[x] = findset(pa[x]) : x; } 
 
-
-void dfs(vector<vii>& G, int s, vector<int>& visited){
-    if (visited[s] == 1) {
-        return;
-    }
-
-    visited[s] = 1;
-    for (auto p: G[s]) {
-        //printf("%d\n", p.first);
-        dfs(G, p.first, visited);
-    }
-}
+int used[256], deg[256]; // 是否出现过；度数
 
 int main() {
-    int T, N;
-    scanf("%d", &T);
-    char s[1005];
+  int T;
+  scanf("%d", &T);
+  while(T--) {
+    int n;
+    char word[maxn];
 
-    while (T--) {
-        vector<int> start[26];
-        vector<int> end[26];
+    scanf("%d", &n);
+    memset(used, 0, sizeof(used));
+    memset(deg, 0, sizeof(deg));
+    for(int ch = 'a'; ch <= 'z'; ch++) pa[ch] = ch; // 初始化并查集
+    int cc = 26; // 连通块个数
 
-        scanf("%d", &N);
-        for (int i=0; i < N ; i++) {
-            scanf("%s", s);
-            char c1 = s[0], c2 = s[strlen(s)-1];
-            start[c1 - 'a'].push_back(i);
-            end[c2 - 'a'].push_back(i);
-        }
-
-
-        vector<vii> G(N, vii());
-        vector<int> deg(N,0);
-
-        for (int i = 0; i < 26; i++) {
-            for (auto u:end[i]) {
-                for (auto v:start[i]) {
-                    deg[u] -=1;
-                    deg[v] +=1;
-                    G[u].push_back(ii(v,1));
-                }
-            }
-        }
-
-
-
-        int s = INT_MAX;
-        for(int i =0; i < N ; i++) {
-            //printf("deg[%d]: %d\n", i , deg[i]);
-            if (deg[i] <= 0) {
-                s = i ;
-                break;
-            }
-        }
-
-        if (s == INT_MAX) {
-            printf("x");
-            printf("The door cannot be opened.\n");
-            continue;
-        }
-
-
-        vector<int> visited(N,0); 
-        dfs(G, s, visited);
-
-        bool connected = true;
-        for(auto i:visited){
-            if (i == 0) {   
-                connected = false;
-                break;
-            }
-        }
-        
-        if (connected == false) {
-            printf("The door cannot be opened.\n");
-        } else {
-            printf("Ordering is possible.\n");
-        }
+    for(int i = 0; i < n; i++) {
+      scanf("%s", word);
+      char c1 = word[0], c2 = word[strlen(word)-1];
+      deg[c1]++;
+      deg[c2]--;
+      used[c1] = used[c2] = 1;
+      int s1 = findset(c1), s2 = findset(c2);
+      if(s1 != s2) { pa[s1] = s2; cc--; }
     }
 
-    return 0;
+    vector<int> d;
+    for(int ch = 'a'; ch <= 'z'; ch++) {
+      if(!used[ch]) cc--; // 没出现过的字母
+      else if(deg[ch] != 0) d.push_back(deg[ch]);
+    }
+    bool ok = false;
+    if(cc == 1 && (d.empty() || (d.size() == 2 && (d[0] == 1 || d[0] == -1)))) ok = true;
+    if(ok) printf("Ordering is possible.\n");
+    else printf("The door cannot be opened.\n");
+  }
+  return 0;
 }
