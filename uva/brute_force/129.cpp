@@ -6,40 +6,51 @@ using namespace std;
 char A[80];
 int n, L;
 
-bool valid(int k, char ch) {
-    string tmp(A, k);
-    tmp.push_back(ch);
-    int length = tmp.length();
-    for (int i = 1; i < length/2; i++) {
-        string s = tmp.substr(length - i, i);
-        string t = tmp.substr(length - i*2, i);
-        if (s ==t) {
+bool valid(int cur, char ch) {
+    int l = cur+1;
+
+    for (int j=1; j<=l/2; j++) {
+        int equal = 1;
+        for (int k =0 ;  k<j; k++) {
+            if (A[l-j + k] != A[l-2*j+k]) {
+                equal = 0;
+                break;
+            }
+        }
+        if (equal == 1) {
             return false;
         }
     }
     return true;
 }
 
-void dfs(int k, int l) {
-    for(int i = 0; i<k ; i++) {
-        printf("%c", A[i]);
-    }
-    for (char ch = 'A'; ch < 'A'+l; ch++) {
-        if (valid(k, ch)) {
-            A[k] = ch;
-            dfs(k+1, l);
-            A[k]=0;
+
+int cnt = 0;
+int  dfs(int k) {
+    if ( cnt++ == n ) {
+        for(int i = 0; i<k ; i++) {
+            printf("%c", A[i]);
         }
+        printf("\n");
+        return 0;
     }
 
+    
+    for (char ch = 'A'; ch < 'A'+ L; ch++) {
+        A[k] = ch;
+        if (valid(k, ch)) {
+            if (!dfs(k+1))
+                return 0;
+        }
+    }
+    return 1;
 }
 
 int main() {
     while(scanf("%d%d",&n, &L)==2 && n && L){
-        for (int l = 1; l <=L; l++) {
-            memset(A, 0, sizeof(A));
-            dfs(0, l);
-        }
+        cnt = 0;
+        memset(A, 0, sizeof(A));
+        dfs(0);
     }
-    
+    return 0;
 }
