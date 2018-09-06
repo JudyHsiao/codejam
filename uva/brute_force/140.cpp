@@ -3,12 +3,17 @@
 #include <sstream>
 #include <vector>
 #include <set>
+#include <list>
+#include <cstring>
+#include <algorithm>
 
 int G[256][256];
 int best;
 char A[26];
+char Ans[26];
 int used[256];
 int n;
+using namespace std;
 
 void split(const string& s, char delim, vector<string>& result) {
     istringstream ss(s);
@@ -19,16 +24,63 @@ void split(const string& s, char delim, vector<string>& result) {
     }
     return;
 }
+int bandwidth(int k) {
+    int b[k];
+    memset(b, 0, sizeof(b));
+    for (int i=0; i <=k; i++) {
+        for(int j = i+1; j <=k ; j++) {
+            if (G[A[i]][A[j]] == 1) {
+                b[i] = max(b[i], j-i);
+            }
+        }
+    }
+
+    return *max_element(b, b+k);
+
+}
+
+void printG() {
+    printf("G\n");
+    for(int i =0 ; i< 256; i++) {
+        for(int j =0 ; j < 256; j++) {
+            printf("%d ", G[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void printV(const set<char>& V) {
+    cout <<"V: ";
+    for(auto v:V) {
+        cout << v << " ";
+    }
+    cout << "\n";
+}
 
 
-void dfs(int k, set<char> V) {
+void dfs(int k, const set<char>& V) {
     if (k == V.size()) {
-
+        int b = bandwidth(k);
+        if (best == -1 || b < best) {
+            best = b;
+            memcpy(Ans, A, n);
+        }
         return;
     }
-    for (auto ch:V) {
 
+    for(auto v:V) {
+        if (used[v] == 0) {
+            A[k]= v;
+            used[v] =1;
+            int b = bandwidth(k);
+            if (best == -1 || b < best ) {
+                dfs(k+1, V);
+            }
+            A[k] = v;
+            used[v] = 0;
+        } 
     }
+
 }
 using namespace std;
 int main(){
@@ -48,10 +100,20 @@ int main(){
                 G[v][u] = 1;
             }
         }
+        printG();
+        printV(V);
+
         memset(A, 0 , sizeof(A));
+        memset(Ans, 0, sizeof(Ans));
         memset(used, 0 , sizeof(used));
         n = V.size();
+        best = -1;
         dfs(0, V);
+
+        for(int i =0 ; i< n; i++) {
+            printf("%c ", Ans[i]);
+        }
+        printf("-> %d\n", best);
     }
 
 
