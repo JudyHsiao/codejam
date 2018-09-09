@@ -27,8 +27,8 @@ void split(const string& s, char delim, vector<string>& result) {
 int bandwidth(int k) {
     int b[k];
     memset(b, 0, sizeof(b));
-    for (int i=0; i <=k; i++) {
-        for(int j = i+1; j <=k ; j++) {
+    for (int i=0; i <k; i++) {
+        for(int j = i+1; j <k ; j++) {
             if (G[A[i]][A[j]] == 1) {
                 b[i] = max(b[i], j-i);
             }
@@ -38,25 +38,6 @@ int bandwidth(int k) {
     return *max_element(b, b+k);
 
 }
-
-void printG() {
-    printf("G\n");
-    for(int i =0 ; i< 256; i++) {
-        for(int j =0 ; j < 256; j++) {
-            printf("%d ", G[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-void printV(const set<char>& V) {
-    cout <<"V: ";
-    for(auto v:V) {
-        cout << v << " ";
-    }
-    cout << "\n";
-}
-
 
 void dfs(int k, const set<char>& V) {
     if (k == V.size()) {
@@ -72,11 +53,10 @@ void dfs(int k, const set<char>& V) {
         if (used[v] == 0) {
             A[k]= v;
             used[v] =1;
-            int b = bandwidth(k);
+            int b = bandwidth(k+1);  //0 ~ k 有值, 長度為k+1
             if (best == -1 || b < best ) {
                 dfs(k+1, V);
             }
-            A[k] = v;
             used[v] = 0;
         } 
     }
@@ -86,7 +66,7 @@ using namespace std;
 int main(){
     string s;
     while (getline(cin, s) && s!="#") {
-        memset(G, sizeof(G), 0);
+        memset(G, 0, sizeof(G));
         set<char> V;
         vector<string> r;
         split(s, ';', r);
@@ -100,9 +80,6 @@ int main(){
                 G[v][u] = 1;
             }
         }
-        printG();
-        printV(V);
-
         memset(A, 0 , sizeof(A));
         memset(Ans, 0, sizeof(Ans));
         memset(used, 0 , sizeof(used));
