@@ -7,7 +7,7 @@
 
 using namespace std;
 struct Node {
-    int A[4][7];
+    int A[24];
     string path;
     Node():path(""){}
 
@@ -19,125 +19,77 @@ struct Node {
     }
 
     bool operator == (const Node& rhs) const{
-       for (int i = 0; i < 4 ; i++) {
-            for (int j = 0; j <7; j++) {
-                if (A[i][j] != rhs.A[i][j]) {
-                    return false;
-                }
-            }
+        for (int i = 0; i < 24 ; i++) {
+            if (A[i]!= rhs.A[i])
+                return false;
         }
+
+        if (path != rhs.path) {
+            return false;
+        }
+
         return true;
+    }
+
+    void move(int i) {
+        int tmp = A[line[i][0]];
+        for(int j = 0; j < 6; j++) 
+            A[line[i][j]] = A[line[i][j+1]];
+        A[line[i][6]] = tmp;
+
+        path += char('A'+ i);
     }
 };
 
-int Q[4][7];
-bool done(Node n, int k) {
+int line[8][7] = {
+  { 0, 2, 6,11,15,20,22}, // A
+  { 1, 3, 8,12,17,21,23}, // B
+  {10, 9, 8, 7, 6, 5, 4}, // C
+  {19,18,17,16,15,14,13}, // D
+};
 
-    for (int i = 0; i < 4 ; i++) {
-        for (int j = 2; j <5; j++) {
-            if (n.A[i][j] != k) {
-                return false;
-            }
-        }
+const int rev[8] = {5, 4, 7, 6, 1, 0, 3, 2}; // reverse lines of each line
+const int center[8] = {6, 7, 8, 11, 12, 15, 16, 17};
+
+bool done(Node n) {
+    for (int i =0; i < 8; i++) {
+        if (n.A[center[i]] == 0)
+            return false;
     }
     return true;
 }
 
 void print(Node n) {
-    for (int i = 0; i < 4 ; i++) {
-        for (int j = 0; j <7; j++) {
-            printf("%d ",n.A[i][j]);
-        }
-        printf("\n");
-    }
+    cout << n.path << endl;
 }
 
-Node bfs(int k) {
+Node bfs(int *a) {
     priority_queue <Node> q;
-    Node start;
     set<Node> h;
-    for(int i=0; i <4; i++) {
-        for (int j = 0; j < 7; j++) {
-            if (Q[i][j] == k) {
-                start.A[i][j] = k;
+    
+    for (int k = 1; k <= 3 ; k++) {
+        Node s;
+        for (int i = 0; i < 24; i++) {
+            if (a[i] == k) {
+                s.A[i] = k;
             } else {
-                start.A[i][j] = 0;
+                s.A[i] = 0;
             }
         }
+        h.insert(s);
+        q.push(s);
     }
-    h.insert(start);
-    q.push(start);
+
     while(!q.empty()) {
         Node n =  q.top();
-        print(n);
-        if (done(n, k))
-            return n; 
         q.pop();
+        if (done(n))
+            return n; 
+
         for (int i = 0; i <8; i++) {
             Node v;
-            if (i == 0 || i== 5) { 
-                memcpy(v.A[1], n.A[1], 7);
-                memcpy(v.A[2], n.A[2], 7);
-                memcpy(v.A[3], n.A[3], 7);
-                if (i == 0) {
-                    memcpy(v.A[0], &n.A[0][1], 6);
-                    v.A[0][6] = n.A[0][0];
-                    v.A[2][2] = n.A[0][3];
-                    v.A[3][2] = n.A[0][5];
-                } else {
-                    memcpy(&v.A[0][1], &n.A[0][0], 6);
-                    v.A[0][0] = n.A[0][6];
-                    v.A[2][2] = n.A[0][1];
-                    v.A[3][2] = n.A[0][3];
-                }
-            } else if (i == 1 || i == 4) {
-                memcpy(v.A[0], n.A[0], 7);
-                memcpy(v.A[2], n.A[2], 7);
-                memcpy(v.A[3], n.A[3], 7);
-                if (i == 1) {
-                    memcpy(v.A[1], &n.A[1][1], 6);
-                    v.A[1][6] = n.A[1][0];
-                    v.A[2][4] = n.A[1][3];
-                    v.A[3][4] = n.A[1][5];
-                } else {
-                    memcpy(&v.A[1][1], &n.A[1][0], 6);
-                    v.A[1][0] = n.A[1][6];
-                    v.A[2][4] = n.A[1][1];
-                    v.A[3][4] = n.A[1][3];
-                }
-            } else if (i == 2 || i== 7) {
-                memcpy(v.A[0], n.A[0], 7);
-                memcpy(v.A[1], n.A[1], 7);
-                memcpy(v.A[3], n.A[3], 7);
-                if (i == 7) {
-                    memcpy(v.A[2], &n.A[2][1], 6);
-                    v.A[2][6] = n.A[2][0];
-                    v.A[0][2] = n.A[2][3];
-                    v.A[1][2] = n.A[2][5];
-                } else {
-                    memcpy(&v.A[2][1], &n.A[2][0], 6);
-                    v.A[2][0] = n.A[2][6];
-                    v.A[0][2] = n.A[2][1];
-                    v.A[1][2] = n.A[2][3];
-                }
-            } else {
-                    memcpy(v.A[0], n.A[0], 7);
-                    memcpy(v.A[1], n.A[1], 7);
-                    memcpy(v.A[2], n.A[2], 7);
-                    if (i == 6) {
-                        memcpy(v.A[3], &n.A[3][1], 6);
-                        v.A[3][6] = n.A[3][0];
-                        v.A[0][4] = n.A[3][3];
-                        v.A[1][4] = n.A[3][5];
-                    } else {
-                        memcpy(&v.A[3][1], &n.A[3][0], 6);
-                        v.A[3][0] = n.A[3][6];
-                        v.A[0][4] = n.A[3][1];
-                        v.A[1][4] = n.A[3][3];
-                    }
-            }
-
-            v.path = n.path + char('A'+ i);
+            memcpy(&v, &n, sizeof(n));
+            v.move(i);
             if (!h.count(v)) {
                 h.insert(v);
                 q.push(v);
@@ -155,56 +107,14 @@ int main() {
         a[i] = d;
         i++;
         if (i == 24) {
-            memset(Q,0,sizeof(Q));
-
-            i = 0;    
-            Q[0][0] = a[0];
-            Q[0][1] = a[2];
-            Q[0][2] = a[6];
-            Q[0][3] = a[11];
-            Q[0][4] = a[15];
-            Q[0][5] = a[20];
-            Q[0][6] = a[22];
-
-            Q[1][0] = a[1];
-            Q[1][1] = a[3];
-            Q[1][2] = a[8];
-            Q[1][3] = a[12];
-            Q[1][4] = a[17];
-            Q[1][5] = a[21];
-            Q[1][6] = a[23];
-
-            Q[2][0] = a[4];
-            Q[2][1] = a[5];
-            Q[2][2] = a[6];
-            Q[2][3] = a[7];
-            Q[2][4] = a[8];
-            Q[2][5] = a[9];
-            Q[2][6] = a[10];
-
-            Q[3][0] = a[13];
-            Q[3][1] = a[14];
-            Q[3][2] = a[15];
-            Q[3][3] = a[16];
-            Q[3][4] = a[17];
-            Q[3][5] = a[18];
-            Q[3][6] = a[19];
-
-            int bestk = 0;
-            string best = "";
-            for (int k = 2; k <=3 ; k++){
-                Node n = bfs(k);
-                if (bestk ==0 || n.path.length() < best.length()) {
-                    bestk = k;
-                    best = n.path;
-                }
-            }
-            if (best.length() == 0) {
+            Node n = bfs(a);
+            if (n.path.length()== 0) {
                 printf("No moves needed\n");
             } else {
-                cout << best << endl;
+                cout << n.path << endl;
             }
-            printf("%d\n", bestk);
+            printf("%d\n", n.A[center[0]]);
+            i = 0; 
         }
     }
 
