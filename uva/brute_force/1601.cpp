@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <cstring>
+#include <cctype>
+#include <queue>
 using namespace std;
 
 const int maxs = 20;
@@ -9,7 +11,50 @@ const int dx[] = {1,-1, 0, 0};
 const int dy[] = {0,0, 1, -1};
 
 int s[3], t[3]; 
+int deg[maxn];
+int G[maxn][5];
 
+int d[maxn][maxn][maxn]; // distance from starting state
+
+inline int ID(int a, int b, int c) {
+  return (a<<16)|(b<<8)|c;
+}
+
+inline bool conflict(int a, int b, int a2, int b2){
+    return (a2==b2) || (a2 ==b && b2 ==a);
+}
+
+int bfs() {
+    queue <int> q;
+    memset(d, -1, sizeof(d));
+    q.push(ID(s[0], s[1], s[2])); // starting node
+    d[s[0]][s[1]][s[2]] = 0;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        int a = (u>>16)&0xff, b = (u>>8)&0xff, c = u&0xff;
+        if(a == t[0] && b == t[1] && c == t[2]) return d[a][b][c]; // solution found
+        for (int i = 0; i < deg[a]; i++) {
+            int a2 = G[a][i];
+            for (int j=0; j< deg[b]; j++) {
+                int b2 =G[b][j];
+                if(conflict(a, b, a2, b2)) continue;
+                for (int k = 0; k < deg[c]; k++) {
+                    int c2 = G[c][k];
+                    if(conflict(a,c, a2,c2)) continue;
+                    if(conflict(b, c, b2, c2)) continue;
+                    if(d[a2][b2][c2] != -1) continue;
+                    d[a2][b2][c2] = d[a][b][c] +1;
+                    q.push(ID(a2,b2,c2));
+
+                }
+            }
+
+        }
+    }
+
+    return -1;
+}
 
 int main() {
     int w, h, n;
@@ -39,8 +84,21 @@ int main() {
 
         //build graph 
         for (int i = 0; i < cnt; i++) {
-            
+            deg[i] = 0;
+            for (int dir = 0; dir <5; dir ++) {
+                int nx = X[i]+dx[dir];
+                int ny = Y[i]+dy[dir];
+                if (maze[nx][ny] != '#') {
+                    G[i][deg[i]++] = id[nx][ny];
+                }
+            }   
         }
+
+        // add fakes nodes so that in each case we have 3 ghosts. this makes the code shorter
+        if(n <= 2) { deg[cnt] = 1; G[cnt][0] = cnt; s[2] = t[2] = cnt++; }
+        if(n <= 1) { deg[cnt] = 1; G[cnt][0] = cnt; s[1] = t[1] = cnt++; }
+
+        printf("%d\n", bfs());
     }
     return 0;
 }
