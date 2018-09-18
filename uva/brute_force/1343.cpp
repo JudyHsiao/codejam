@@ -3,9 +3,17 @@
 #include <queue>
 #include <string>
 #include <iostream>
-#include <set>
+#include <unordered_set>
 
 using namespace std;
+
+int line[8][7] = {
+  { 0, 2, 6,11,15,20,22}, // A
+  { 1, 3, 8,12,17,21,23}, // B
+  {10, 9, 8, 7, 6, 5, 4}, // C
+  {19,18,17,16,15,14,13}, // D
+};
+
 struct Node {
     int A[24];
     string path;
@@ -23,11 +31,7 @@ struct Node {
             if (A[i]!= rhs.A[i])
                 return false;
         }
-
-        if (path != rhs.path) {
-            return false;
-        }
-
+        
         return true;
     }
 
@@ -41,12 +45,20 @@ struct Node {
     }
 };
 
-int line[8][7] = {
-  { 0, 2, 6,11,15,20,22}, // A
-  { 1, 3, 8,12,17,21,23}, // B
-  {10, 9, 8, 7, 6, 5, 4}, // C
-  {19,18,17,16,15,14,13}, // D
+
+template<> struct hash<Node>
+{
+    size_t operator()(const Node& a) const
+    {
+        string s = "";
+        for (int i = 0; i < 24 ; i++) {
+            s+=a.A[i];
+        }
+        return std::hash<std::string>()(s);
+    }
 };
+
+
 
 const int rev[8] = {5, 4, 7, 6, 1, 0, 3, 2}; // reverse lines of each line
 const int center[8] = {6, 7, 8, 11, 12, 15, 16, 17};
@@ -61,11 +73,14 @@ bool done(Node n) {
 
 void print(Node n) {
     cout << n.path << endl;
+    for (int i =0; i < 24; i++)
+        printf("%d ", n.A[i]);
+    printf("\n");
 }
 
 Node bfs(int *a) {
     priority_queue <Node> q;
-    set<Node> h;
+    unordered_set<Node> h;
     
     for (int k = 1; k <= 3 ; k++) {
         Node s;
@@ -83,6 +98,7 @@ Node bfs(int *a) {
     while(!q.empty()) {
         Node n =  q.top();
         q.pop();
+        //print(n);
         if (done(n))
             return n; 
 
@@ -90,7 +106,8 @@ Node bfs(int *a) {
             Node v;
             memcpy(&v, &n, sizeof(n));
             v.move(i);
-            if (!h.count(v)) {
+
+            if (h.find(v) == h.end()) {
                 h.insert(v);
                 q.push(v);
             }
