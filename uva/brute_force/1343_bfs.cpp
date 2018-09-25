@@ -2,6 +2,7 @@
 #include <deque>
 #include <queue>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <unordered_set>
 
@@ -46,7 +47,7 @@ struct Node {
 };
 
 
-template<> struct hash<Node>
+struct NodeHasher
 {
     size_t operator()(const Node& a) const
     {
@@ -80,7 +81,7 @@ void print(Node n) {
 
 Node bfs(int *a) {
     priority_queue <Node> q;
-    unordered_set<Node> h;
+    unordered_set<Node, NodeHasher> h;
     
     for (int k = 1; k <= 3 ; k++) {
         Node s;
@@ -113,12 +114,18 @@ Node bfs(int *a) {
             }
         }
     }
+
+    Node tmp;
+    return tmp;  // should never reach here
 }
 
 int main() {
     int a[24];
     int d ;
     int i = 0;
+    
+    for(int i = 4; i < 8; i++)
+        for(int j = 0; j < 7; j++) line[i][j] = line[rev[i]][6-j];
 
     while(scanf("%d", &d) == 1 && d) {
         a[i] = d;
