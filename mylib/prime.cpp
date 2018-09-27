@@ -11,8 +11,6 @@ struct factor {
     factor(int a, int n):a(a),n(n){}
 };
 
-
-
 void prime_factor_decomposition(int n, vector<factor> &factors) {
     int m = floor(sqrt(n) + 0.5);
     for (int i = 2; i < m; i++) {
@@ -52,34 +50,9 @@ void printFactor(vector<factor> F) {
     printf("\n");
 }
 
-long long solve(int n) {
-    if (n ==1) {
-        return 2;
-    }
+int main() {
 
     vector<factor> f;
-    prime_factor_decomposition(n, f);
-
-    long long ans =0;
-
-    if (f.size() <= 1) {
-        return (long long) n+1; 
-    } else {
-        
-        for (int i = 0; i < f.size(); i++) {
-            ans += pow(f[i].a,f[i].n);
-        }
-    }
-    return ans;
-}
-
-
-
-int main() {
-    int kase = 1;
-    int n;
-    while(scanf("%d", &n) ==1 && n) {
-        printf("Case %d: %lld\n", kase++, solve(n));
-    }
-
+    prime_factor_decomposition(32, f);
+    printFactor(f);
 }
