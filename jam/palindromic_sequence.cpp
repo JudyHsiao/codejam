@@ -1,4 +1,5 @@
 #include <iostream>
+<<<<<<< HEAD
 #include <vector>
 #include <string>
 #include <map>
@@ -88,4 +89,22 @@ int main(){
 
         printf("Case #%d: %ld",kase++, ans);
     }
+=======
+#include <string>
+
+using namespace std;
+
+int main(){
+    int T;
+    int kase = 0;
+    cin >> T ;
+
+    while (T--) {
+        int L, N ,K;
+        cin >> L >> N >> K;
+
+        
+    }
+    return 0;
+>>>>>>> a328719d8691450de5bc98e851dc209788a9bb9e
 }
