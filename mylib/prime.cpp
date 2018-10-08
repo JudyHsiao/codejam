@@ -13,7 +13,7 @@ struct factor {
 
 void prime_factor_decomposition(int n, vector<factor> &factors) {
     int m = floor(sqrt(n) + 0.5);
-    for (int i = 2; i < m; i++) {
+    for (int i = 2; i <= m; i++) {
         int e = 0;
         while (n % i == 0) {
             e++;
