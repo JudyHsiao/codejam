@@ -1,21 +1,28 @@
-#include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <vector>
 
 using namespace std;
+int main() {
 
-struct Node{
     int a;
     int b;
-    Node(int a, int b):a(a),b(b){};
-};
+    scanf("%d", &a);
+    scanf("%d", &b);
 
-Node foo() {
-    Node n = Node(5,8);
-    return n;
-}
-int main(){
-    int a = 7/2 ;
-    cout << a << endl;
 
-    Node n =  foo();
-    cout << n.a << " " << n.b << endl;
+    int dp[a][b];
+    memset(dp, 0, sizeof(dp));
+
+    for (int i =0 ;i <a; i ++){
+        for (int j =0 ;j <b; j ++)
+            printf("%d", dp[i][j]);
+        printf("\n");
+    }
+
+    
+
+
+
+
 }
