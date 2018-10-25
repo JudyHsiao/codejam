@@ -1,6 +1,18 @@
 #include <cstdio>
 //ax + by =
 
+typedef long long LL;
+
+LL gcd(LL a, LL b) {
+  if(!b) return a;
+  return gcd(b, a%b);
+}
+
+LL lcm(LL a, LL b) {
+  return a / gcd(a, b) * b;
+}
+
+
 void gcd(int a, int b, int &d, int &x, int &y) {
     if(!b) { d = a ; x = 1; y = 0 ;}
     else {
