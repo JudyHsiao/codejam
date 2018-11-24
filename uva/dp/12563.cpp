@@ -29,22 +29,20 @@ int main() {
         int maxt = 0;
         for (int i = n-1; i>=0; i--) {
             for (int j = 0; j < t; j++) {
-                if (j >= len[i]) {
-                    d[i][j] = max(d[i][j], d[i+1][j - len[i]] + 1);
-                    //printf("%d,%d:%d\n",i, j, d[i][j]);
-                    if (d[i][j] > ans) {
-                        ans = d[i][j] ;
-                        if (j > maxt) {
-                            maxt = j;
-                        }
-                    }                    
+                d[i][j] = d[i+1][j];   //注意 易錯 不要放在if裡面
+                if (j >= len[i]&&  d[i+1][j - len[i]] >=0) {
+                    d[i][j] = max(d[i][j], d[i+1][j - len[i]] + 1);                 
                 }
             }
         }
 
-        printf("Case %d: %d %d\n", kase++, ans+1  , maxt+678);
-        
-       
+        for(int i =t-1; i>=0; i--) {
+            if (d[0][i] == ans) {
+                printf("Case %d: %d %d\n", kase++, ans+1  ,i+678);
+                break;
+            }
+
+        }   
     }
     return 0;
 
