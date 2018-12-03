@@ -18,8 +18,7 @@ ULL pow_mod(ULL x, unsigned int y)
 { 
     ULL res = 1;      // Initialize result 
   
-    x = x % MOD;  // Update x if it is more than or  
-                // equal to p 
+    x = x % MOD;  // Update x if it is more than or  equal to p 
   
     while (y > 0) 
     { 
