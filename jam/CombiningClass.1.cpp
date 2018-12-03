@@ -13,7 +13,7 @@ int t;
 
 
 void solve(const vector<pair<int,int>>& I,const vector <pair<long long,int>>& QQ ){
-    float h=1;
+    double h=1;
     long long total = 0;
     int j = 0;
     int i = 1;
@@ -27,19 +27,14 @@ void solve(const vector<pair<int,int>>& I,const vector <pair<long long,int>>& QQ
         }
         int w =  I[start].first - I[i].first ;
         
-        long long count = h * w;
+        long long count = 1ll * h * w;
         //cout<< "w:" << w << " h:" << h <<endl;
 
         while(j < QQ.size() && QQ[j].first <= total + count) {
-            //cout<< "q:" <<  Q[j].first << " sum:" << total + count <<endl;
-            //cout <<"total: " << total << " start: " << I[start].first  +1 <<  " xx:" << ceil((Q[j].first - total) / h)<<endl;
+            //cout<< "q:" <<  QQ[j].first << " sum:" << total + count <<endl;
             
-            int a = I[start].first  +1;
-            int b = ceil((QQ[j].first - total) / h);
-            //cout <<"total: " << total << " a: " << a <<  " b:" << b <<endl;
-            int k2 = I[start].first +1 - ceil((QQ[j].first - total) / h);
-            int k = a - b;
-            //cout << "k:" << k << " k2:"<< k2<<endl; 
+            int k = I[start].first +1 - (int)ceil((QQ[j].first - total) / h);
+            //cout << "k:" << k << endl;
             K[QQ[j].second] = k;
             j++;
 
@@ -107,20 +102,20 @@ int main(){
         }
 
         sort(queries.begin(), queries.end());
-        /*
+        
         cout << "Q:" ;
         for(int i = 0; i <Q; i++) { 
             cout << queries[i].first << " ";
         }
         cout << endl;
-        */
+        
 
         memset(K, 0 , sizeof(K));
         solve(I, queries);
 
         long long ans = 0;
         for (int i = 1; i <=Q; i ++) {
-            ans += 1L* K[i]*i;
+            ans += 1LL* K[i]*i;
         }
         printf("Case #%d: %lld\n", t, ans);
 
