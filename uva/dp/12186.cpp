@@ -1,40 +1,41 @@
 #include <cstdio>
+#include <map>
 #include <vector>
 #include <algorithm>
 using namespace std;
-
 const int maxn = 100000+5;
-int n, T;
+int N, T;
 
-vector<int> sons[maxn];
-int dp(int u){
-    if(sons[u].empty()) return 1;
-    int k = sons[u].size();
+int dp (int p,const vector<int>* son) {
+    if(son[p].empty()) {
+        return 1;
+    }
+
     vector<int> d;
-    for(int i=0; i<k; i++) {
-        d.push_back(dp(sons[u][i]));
+    for (auto n: son[p]){
+        d.push_back(dp(n, son));
     }
     sort(d.begin(), d.end());
-    int c = (k*T - 1) / 100 + 1;
+    int c = (son[p].size() * T -1) /100 +1;
     int ans = 0;
-    for(int i = 0; i< c; i++)
-        ans +=d[i];
+    for (int i =0; i < c; i++) {
+        ans+=d[i];
+    } 
 
     return ans;
 }
 
 int main() {
-    int f;
-
-    while(scanf("%d%d", &n,&T) ==2 &&n) {
-        for(int i = 0; i<=n; i++)
-            sons[i].clear();
-        for(int i = 1; i <= n; i++) {
-            scanf("%d", &f);
-            sons[f].push_back(i);
+    int boss = 0;
+    while(scanf("%d%d", &N, &T) == 2 && N && T) {
+        vector<int> son[maxn]; 
+        for (int i =1 ; i <= N ; i++) {
+            scanf("%d", &boss);
+            son[boss].push_back(i);
         }
 
-        printf("%d\n", dp(0));
+        printf("%d\n", dp(0, son));
     }
     return 0;
+    
 }
