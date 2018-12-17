@@ -26,25 +26,21 @@ void deleteTrie(struct TrieNode *root) {
     delete(root);
 }
 
-  
-// If not present, inserts key into trie 
-// If the key is prefix of trie node, just 
-// marks leaf node 
 void insert(struct TrieNode *root, string key) 
 { 
-    struct TrieNode *pCrawl = root; 
+    struct TrieNode *cur = root; 
   
     for (int i = 0; i < key.length(); i++) 
     { 
         int index = key[i] - 'a'; 
-        if (!pCrawl->children[index]) 
-            pCrawl->children[index] = new TrieNode();
+        if (!cur->children[index]) 
+            cur->children[index] = new TrieNode();
   
-        pCrawl = pCrawl->children[index]; 
+        cur = cur->children[index]; 
     } 
   
     // mark last node as leaf 
-    pCrawl->isEndOfWord = true; 
+    cur->isEndOfWord = true; 
 } 
   
 // Returns true if key presents in trie, else 
