@@ -36,6 +36,7 @@ int solve(){
             return u.dist;
         if (mark[u.bugs])
             continue;
+
         mark[u.bugs] = 1;
 
         for(int i = 0 ; i < m; i++ ){
@@ -60,8 +61,7 @@ int solve(){
 
         }
     }
-
-
+    return -1;
 }
 
 int main() {
