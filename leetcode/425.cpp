@@ -27,14 +27,14 @@ vector<int> Trie::empty;
  TrieNode::~TrieNode() {
      cout << "~TrieNode()" << endl;
      for(auto& p: children) {
-         if (p.second != nullptr)
+        if (p.second != nullptr)
             delete p.second;
      }
  }
 
  Trie::~Trie() {
-      cout << "~Trie()" << endl;
-     delete root;
+    cout << "~Trie()" << endl;
+    delete root;
  }
 
 void Trie::build(const vector<string>& words) {
@@ -46,13 +46,12 @@ void Trie::build(const vector<string>& words) {
 void Trie::insert(const string& s, int id) {
  
     TrieNode* cur = root;
-
     for (const auto ch:s){
         if (cur->children[ch] == nullptr) {
             cur->children[ch] = new TrieNode();
         }
         cur->words.push_back(id);
-        cur = cur->children[ch];    
+        cur = cur->children[ch];
     }
     cur->words.push_back(id);
     cur->isWord=true;
@@ -71,24 +70,53 @@ const vector<int>&  Trie::startwith(const string& s) const{
 
 
 
-  
-// Driver 
-int main() 
-{ 
 
-    vector<string> words = {"the", "a", "there", 
-                    "answer", "any", "by", 
-                     "bye", "their" }; 
-  
-    Trie t;
-  
-    t.build(words);
-  
-    const vector<int>& v = t.startwith("");
-    for(const auto& i: v) {
-        cout << words[i] << endl;
+
+
+
+void dfs (const Trie& t, int n , const vector<string>& words, vector<int>& curr, vector<vector<string>>& ans) {
+    
+    int k = curr.size();
+    if (k == n) {
+        vector<string> tmp;
+        for (const auto &i:curr)
+            tmp.push_back(words[i]);
+        ans.push_back(tmp);
     }
-    cout << "Finish" << endl;
+    string prefix;
+    for(const auto& i:curr) {
+        prefix.push_back(words[i][k]);
+    }
 
-    return 0; 
-} 
+    const vector<int>& v = t.startwith(prefix);
+    for (const auto &i: v) {
+        curr.push_back(i);
+        dfs(t, n, words, curr, ans);
+        curr.pop_back();
+    }
+
+    return;    
+}
+    
+vector<vector<string>> wordSquares(const vector<string>& words) {
+    if (words.size() == 0)
+        return vector<vector<string>>{};
+    
+    Trie t ;
+    t.build(words);
+    vector<vector<string>> ans;
+    vector<int> curr;
+    dfs(t, words[0].size(), words, curr, ans);
+    return ans;
+}
+
+int main() {
+    
+   vector<vector<string>> ans = wordSquares({"abat","baba","atan","atal"});
+   for (const auto&v: ans) {
+    for (const auto &s :v)
+        cout << s << endl;
+    cout << endl;
+   }
+   return 0;
+}

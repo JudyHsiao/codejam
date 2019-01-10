@@ -3,20 +3,34 @@
 using namespace std;
 
 
-vector<int> pset(1000); // 1000 is just an initial number, it is user-adjustable.
-void initSet(int size) { 
-    pset.resize(size+1); 
-    for (int i = 0; i <= size ;i ++) 
-        pset[i] = i; 
-} 
-int findSet(int i) { return (pset[i] == i) ? i : (pset[i] = findSet(pset[i])); } 
-void unionSet(int i, int j) { pset[findSet(i)] = findSet(j); }
-bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }
-int sizeOfSet(){
-    set <int> s;
-    int n = pset.size();
-    for (int i =0 ; i < n; i++) {
-        s.insert(pset[i]);
+struct UnionFind {
+    UnionFind(int n):pset(n) {
+        for (int i = 0; i < n; i++)
+            pset[i]= i;
+    };
+    int find (int x) {
+        if (pset[x] !=x)
+            pset[x] = find(pset[x]);
+        
+        return pset[x];
     }
-    return s.size();
-}
+    
+    bool Union(int x, int y) {
+        int px = find(x);
+        int py = find(y);
+        if (px == py)
+            return false;
+        pset[px] = py;
+        return true;
+    }
+    
+    int numOfComponents() {
+        for(int i= 0; i < pset.size(); i++)
+            find(i);
+        
+        set<int> s(pset.begin(), pset.end());
+        return s.size();
+    }
+    
+    vector<int> pset;
+};
