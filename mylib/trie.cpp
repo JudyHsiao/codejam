@@ -25,11 +25,11 @@ struct Trie {
 vector<int> Trie::empty;
 
  TrieNode::~TrieNode() {
-     cout << "~TrieNode()" << endl;
-     for(auto& p: children) {
-         if (p.second != nullptr)
+    cout << "~TrieNode()" << endl;
+    for(auto& p: children) {
+        if (p.second != nullptr)
             delete p.second;
-     }
+    }
  }
 
  Trie::~Trie() {
